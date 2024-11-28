@@ -11,6 +11,6 @@
   .container {
     width: 100%;
     height: 7rem;
-    background-color: pink;
+    background-color: red;
   }
 </style>
