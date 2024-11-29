@@ -1,0 +1,39 @@
+.toast-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  padding: 1.2rem;
+  box-sizing: content-box;
+}
+
+.toast {
+  width: 40rem;
+  background-color: white;
+  color: black;
+  padding: 2rem 1.2rem;
+  margin: 0.4rem 0;
+  border-radius: 0.4rem;
+  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.1);
+  animation: fadeIn 5s ease-out;
+  font-size: 1.6rem;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+}

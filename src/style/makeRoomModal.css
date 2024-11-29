@@ -1,0 +1,63 @@
+.shadow {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  width: 64rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.modal-title {
+  font-size: 2.4rem;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.6rem;
+  border: 0.1rem solid rgba(96, 193, 188, 1);
+  outline: none;
+  border-radius: 0.8rem;
+}
+
+.modal-button-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-submit-button {
+  font-size: 1.6rem;
+  background-color: rgba(96, 193, 188, 1);
+  border-radius: 1rem;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  outline: none;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-cancel-button {
+  font-size: 1.6rem;
+  border: 0.1rem solid rgba(96, 193, 188, 1);
+  border-radius: 1rem;
+  padding: 0.8rem 1.2rem;
+  outline: none;
+  background-color: white;
+  cursor: pointer;
+}
