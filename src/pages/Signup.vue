@@ -12,7 +12,7 @@ const loading = ref(false);
 
 const router = useRouter();
 const showToast =
-  inject<(message: string, duration?: number) => void>("showToast")!;
+  inject<(message: string) => void>("showToast")!;
 
 const submit = async () => {
   if (loading.value) {

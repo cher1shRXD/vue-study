@@ -61,3 +61,15 @@
   background-color: white;
   cursor: pointer;
 }
+
+.modal-subtitle {
+  font-size: 2rem;
+  align-self: center;
+}
+
+.join-code {
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(96, 193, 188, 1);
+  align-self: center;
+}

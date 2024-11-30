@@ -28,7 +28,7 @@ const makeRoomModal = ref(false);
       </div>
     </div>
   </div>
-  <MakeRoomModal v-if="makeRoomModal"/>
+  <MakeRoomModal v-model:showModal="makeRoomModal" />
 </template>
 
 <style lang="css" scoped>
