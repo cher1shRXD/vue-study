@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch, onUpdated } from "vue";
+import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
 import instance from "../libs/customAxios";
 import { io } from "socket.io-client";
@@ -23,12 +23,21 @@ const showToast = inject<(message: string) => void>("showToast")!;
 const sending = ref(false);
 const message = ref("");
 const messages = ref<Chat[]>([]);
-
-// Ref for the chat box element
 const chatBox = ref<HTMLElement | null>(null);
 
+const socket = io(import.meta.env.VITE_API_URL);
+
+const scrollToBottom = (smooth = true) => {
+  if (chatBox.value) {
+    chatBox.value.scrollTo({
+      top: chatBox.value.scrollHeight,
+      behavior: smooth ? "smooth" : "auto",
+    });
+  }
+};
+
 const send = async () => {
-  if (sending.value || !props.roomId || message.value.length === 0) {
+  if (sending.value || !props.roomId || message.value.trim().length === 0) {
     return;
   }
   try {
@@ -45,25 +54,30 @@ const send = async () => {
   }
 };
 
-const socket = io(import.meta.env.VITE_API_URL);
-
-const onEnter = (e:any) => {
-  if(e.key === "Enter" || !e.nativeEvent.isComposing) {
+const onEnter = (e: KeyboardEvent) => {
+  if (e.key === "Enter" && !e.isComposing) {
     send();
   }
-}
+};
 
 watch(
   () => props.roomId,
   (newRoomId, oldRoomId) => {
-    if (props.roomId && newRoomId !== oldRoomId) {
-      fetchChatRoom(props.roomId);
-      socket.on("connection", () => console.log("connected"));
-      socket.emit("joinRoom", props.roomId);
+    if (newRoomId && newRoomId !== oldRoomId) {
+      // Fetch the new chat room data
+      fetchChatRoom(newRoomId);
+
+      // Clean up previous event listeners
+      socket.off("newMessage");
+
+      // Join the new room
+      socket.emit("joinRoom", newRoomId);
+
+      // Handle incoming messages
       socket.on("newMessage", (data) => {
-        console.log("New message received:", data);
         if (data) {
           messages.value.push(data);
+          scrollToBottom();
         }
       });
     }
@@ -75,23 +89,18 @@ watch(
   (newChatRoom) => {
     if (newChatRoom) {
       messages.value = newChatRoom.chats;
+      scrollToBottom(false); // No smooth scroll for initial load
     }
   }
 );
 
-watch(
-  () => messages.value,
-  () => {
-    if (chatBox.value) {
-      chatBox.value.scrollTop = chatBox.value.scrollHeight;
-    }
-  }
-);
+onMounted(() => {
+  socket.on("connect", () => console.log("Socket connected"));
+  socket.on("disconnect", () => console.log("Socket disconnected"));
+});
 
-onUpdated(() => {
-  if (chatBox.value) {
-    chatBox.value.scrollTop = chatBox.value.scrollHeight;
-  }
+onBeforeUnmount(() => {
+  socket.disconnect(); // Clean up socket connection
 });
 </script>
 
@@ -107,7 +116,6 @@ onUpdated(() => {
     <div class="chat-box-wrap" ref="chatBox">
       <div
         class="chat-message"
-        v-if="chatRoom"
         v-for="(chat, index) in messages"
         :key="index"
       >
@@ -132,11 +140,11 @@ onUpdated(() => {
         class="message-input"
         placeholder="메시지를 입력해주세요"
         v-model="message"
-        @keypress="onEnter"
+        @keydown="onEnter"
       />
       <button
         class="message-send"
-        :disabled="sending || message.length === 0"
+        :disabled="sending || message.trim().length === 0"
         @click="send"
       >
         send
