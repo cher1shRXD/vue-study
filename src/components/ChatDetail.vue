@@ -47,8 +47,8 @@ const send = async () => {
 
 const socket = io(import.meta.env.VITE_API_URL);
 
-const onEnter = (e:KeyboardEvent) => {
-  if(e.key === "Enter") {
+const onEnter = (e:any) => {
+  if(e.key === "Enter" || !e.nativeEvent.isComposing) {
     send();
   }
 }
