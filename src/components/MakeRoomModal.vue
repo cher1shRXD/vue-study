@@ -35,6 +35,8 @@ const submit = async () => {
 };
 
 const closeModal = () => {
+  name.value = '';
+  joinCode.value = '';
   emit("update:showModal", false);
 };
 </script>
@@ -60,8 +62,8 @@ const closeModal = () => {
         v-model="name"
       />
       <div class="modal-button-wrap">
-        <button class="modal-cancel-button" @click="closeModal">취소</button>
-        <button class="modal-submit-button" @click="submit">생성</button>
+        <button class="modal-cancel-button" @click="closeModal" :disabled="loading">취소</button>
+        <button class="modal-submit-button" @click="submit" :disabled="loading">생성</button>
       </div>
     </div>
   </div>

@@ -1,0 +1,76 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-list-wrap {
+  width: 44rem;
+  height: 100%;
+  border-right: 0.1rem solid #ccc;
+}
+
+.chat-list-header {
+  width: 100%;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.chat-list-title {
+  font-size: 2.4rem;
+  font-weight: 500;
+}
+
+.chat-list-back {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  object-position: center;
+  cursor: pointer;
+}
+
+.chat-list-area {
+  width: 100%;
+  height: calc(100% - 6rem);
+  overflow-y: scroll;
+}
+
+.chat-item {
+  width: 100%;
+  height: 8rem;
+  border-bottom: 0.1rem solid #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  &:last-child {
+    border-bottom: none;
+  }
+  &:first-child {
+    border-bottom: 0.1rem solid #f1f1f1;
+    border-top: 0.1rem solid #f1f1f1;
+  }
+}
+
+.chat-name {
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.chat-members {
+  font-size: 1.6rem;
+  color: gray;
+}
+
+.chat-area {
+  width: calc(100% - 44rem);
+  position: relative;
+  height: 100%;
+}
