@@ -47,6 +47,12 @@ const send = async () => {
 
 const socket = io(import.meta.env.VITE_API_URL);
 
+const onEnter = (e:KeyboardEvent) => {
+  if(e.key === "Enter") {
+    send();
+  }
+}
+
 watch(
   () => props.roomId,
   (newRoomId, oldRoomId) => {
@@ -73,11 +79,9 @@ watch(
   }
 );
 
-// Watch the messages array to trigger scroll to the bottom
 watch(
   () => messages.value,
   () => {
-    // Scroll the chat box to the bottom whenever messages change
     if (chatBox.value) {
       chatBox.value.scrollTop = chatBox.value.scrollHeight;
     }
@@ -85,7 +89,6 @@ watch(
 );
 
 onUpdated(() => {
-  // Ensure scrolling works on initial render as well
   if (chatBox.value) {
     chatBox.value.scrollTop = chatBox.value.scrollHeight;
   }
@@ -129,6 +132,7 @@ onUpdated(() => {
         class="message-input"
         placeholder="메시지를 입력해주세요"
         v-model="message"
+        @keypress="onEnter"
       />
       <button
         class="message-send"
