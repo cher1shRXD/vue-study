@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { computed, inject, ref, watch, onMounted, onBeforeUnmount, onUpdated } from "vue";
 import { useStore } from "vuex";
 import instance from "../libs/customAxios";
 import { io } from "socket.io-client";
@@ -26,15 +26,6 @@ const messages = ref<Chat[]>([]);
 const chatBox = ref<HTMLElement | null>(null);
 
 const socket = io(import.meta.env.VITE_API_URL);
-
-const scrollToBottom = (smooth = true) => {
-  if (chatBox.value) {
-    chatBox.value.scrollTo({
-      top: chatBox.value.scrollHeight,
-      behavior: smooth ? "smooth" : "auto",
-    });
-  }
-};
 
 const send = async () => {
   if (sending.value || !props.roomId || message.value.trim().length === 0) {
@@ -64,20 +55,15 @@ watch(
   () => props.roomId,
   (newRoomId, oldRoomId) => {
     if (newRoomId && newRoomId !== oldRoomId) {
-      // Fetch the new chat room data
       fetchChatRoom(newRoomId);
 
-      // Clean up previous event listeners
       socket.off("newMessage");
 
-      // Join the new room
       socket.emit("joinRoom", newRoomId);
 
-      // Handle incoming messages
       socket.on("newMessage", (data) => {
         if (data) {
           messages.value.push(data);
-          scrollToBottom();
         }
       });
     }
@@ -87,12 +73,18 @@ watch(
 watch(
   () => chatRoom.value,
   (newChatRoom) => {
-    if (newChatRoom) {
+    if (newChatRoom && chatBox.value) {
       messages.value = newChatRoom.chats;
-      scrollToBottom(false); // No smooth scroll for initial load
+      chatBox.value.scrollTop = chatBox.value.scrollHeight;
     }
   }
 );
+
+onUpdated(() => {
+  if (chatBox.value) {
+    chatBox.value.scrollTop = chatBox.value.scrollHeight;
+  }
+});
 
 onMounted(() => {
   socket.on("connect", () => console.log("Socket connected"));
@@ -100,7 +92,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  socket.disconnect(); // Clean up socket connection
+  socket.disconnect();
 });
 </script>
 
